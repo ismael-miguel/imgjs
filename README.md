@@ -45,3 +45,18 @@ Lets check it!
  - If speed to decode is more important that size, use the `shortcode` encoder, with `{minimify: true}`. It passes `{comments: true, whitespace: true}` by default.
  - Avoid images beyound 4096x4096, or code beyound 100kb.
  - If you are going to encode less than 20 bytes, it isn't worth it. Try to assemble a few files together before.
+
+## Examples of usage:
+
+Using jQuery 2.1.4 (minified):
+
+	IMGJS
+		//load jQuery
+		.get('http://i.imgur.com/7NXiBPP.png')
+		.success(function(){
+			console.log([this, arguments]);
+		})
+		.success(function(){
+			//shows the version
+			alert($.fn.jquery);
+		});
