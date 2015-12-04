@@ -23,15 +23,14 @@ Lets check it!
      - `mode` - How the image will be rendered (square or line). Values: `square` (default), `line`, `hline` and `vline`
      - `encoder` - Accepts any value returned by `.getEncoders`. Current values:
          - `none` - Pure plaintext, untouched
-         - `lzw` - Uses lzw compression to reduce the size of the text
-         - `shortcode` - Uses 1-byte compression with a static dictionary, to reduce greatly the size. Options:
-             - `minimify` - Accepts a boolean value. Runs the code through `minimify` before storing
-             - `options` - Options used by `minimify`
-         - `shortcode2` - More complex, requiring 2 bytes to compress the values. This can reduce almost 4x more than `shortcode`.
          - `minimify` - Reduces the size of the code, producing an almost-unreadable version. Options:
              - `comments` - Indicates to all comments that are safe to remove
              - `whitespace` - Indicates to clean all whitespaces that are safe to delete
              - `unsafe` - **REALLY** eager and agressive reduction. **MAY CAUSE SYNTAX ERRORS!!!**
+         - `shortcode` - Uses 1-byte compression with a static dictionary, to reduce greatly the size. Options:
+             - `minimify` - Accepts a boolean value. Runs the code through `minimify` before storing
+             - `options` - Options used by `minimify`
+         - `shortcode2` - More complex, requiring 2 bytes to compress the values. This can reduce almost 4x more than `shortcode`.
      - `options` - Passes options to the encoders
  - `decode(img)` - Accepts a simple `<canvas>` or `<img>`, returning the decoded content from the image
  - `getEncoders()` - Returns an array with the list of all the available encoders
@@ -41,10 +40,9 @@ Lets check it!
  - Pass your own canvas, instead of an image.
  - If you are using an external server, check for the header `Access-Control-Allow-Origin: *` (imgur allows CORS)
  - Also, for images on external servers, avoid using the `.run()` method. Prefer the `.get()`, since it has better error handling
- - Avoid using the `lzw` encoder. It doesn't work well due to the need to encode every compressed element into 3 bytes
  - If speed to decode is more important that size, use the `shortcode` encoder, with `{minimify: true}`. It passes `{comments: true, whitespace: true}` by default.
- - Avoid images beyound 4096x4096, or code beyound 100kb.
- - If you are going to encode less than 20 bytes, it isn't worth it. Try to assemble a few files together before.
+ - Avoid images beyound 200x200, or code beyound 100kb.
+ - If you are going to encode less than 200 bytes, it isn't worth it. Try to assemble a few files together before.
 
 ## Examples of usage:
 
@@ -60,3 +58,15 @@ Using jQuery 2.1.4 (minified):
 			//shows the version
 			alert($.fn.jquery);
 		});
+
+Encoding a piece of code (default settings):
+
+	IMGJS.encode('alert("Hello, world!");');
+
+Decoding an image:
+
+	IMGSRC.decode(document.getElementById('foo'));
+
+Advanced encoding (`shortcode` + `minimify`, `hline`)
+
+	IMGJS.encode('alert("Hello, world!");', 'hline', 'shortcode', {minimify: true});
