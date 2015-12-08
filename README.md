@@ -20,13 +20,23 @@ Lets check it!
  - `run(img, fn)` - Executes the code inside the `img` (may be a `<canvas>` or an `<img>`), and the `fn` on success;
  - `encode(code, mode, encoder, options)` - Encodes the code into a `<canvas>`, returning also the context. Expected values, per parameter:
      - `code` - A simple string with everything to encode
-     - `mode` - How the image will be rendered (square or line). Values: `square` (default), `line`, `hline` and `vline`
-     - `encoder` - Accepts any value returned by `.getEncoders`. Current values:
+     - `mode` - How the image will be rendered (square or line). Values:
+         - `square` (default) - Produces a perfect quare
+         - `vline` - Creates a vertical image (but produces lots of wasted pixels)
+         - `line` / `hline` - Create an horizontal line (and smallest file size, sometimes)
+         - `optimal` - Creates an optimally-sized image, to avoid wasting pixels. Chooses horizontal lines over vertical lines to reduce the size even more.
+     - `encoder` - Accepts any value returned by `.getEncoders()`. Current values:
          - `none` - Pure plaintext, untouched
          - `minimify` - Reduces the size of the code, producing an almost-unreadable version. Options:
+             - `all` - Enables all options, unless explicitly disabled
+             - `all_unsafe` - Enables all unsafe options, unless explicitly disabled ones
              - `comments` - Indicates to all comments that are safe to remove
              - `whitespace` - Indicates to clean all whitespaces that are safe to delete
              - `unsafe` - **REALLY** eager and agressive reduction. **MAY CAUSE SYNTAX ERRORS!!!**
+                 - `parse_escapes` - Parses escape sequences (like `\x5B`) and alternative numerical representations (`0xFF > 255`)
+                 - `parse_entities` - Tries to parse HTML entities, like `&euro;`
+                 - `reduce_booleans` - Converts every `true` and `false` into `!0` and `!1`, respectivelly
+                 - `eval_constants` - Runs **basic** mathematical expressions and some logical expressions (e.g.: `5*6 > 36`)
          - `shortcode` - Uses 1-byte compression with a static dictionary, to reduce greatly the size. Options:
              - `minimify` - Accepts a boolean value. Runs the code through `minimify` before storing
              - `options` - Options used by `minimify`
